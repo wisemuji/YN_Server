@@ -1,0 +1,27 @@
+{
+  "name": "yn_server",
+  "version": "1.0.0",
+  "description": "\"# YN_Server\"",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "await-to-js": "^2.0.1",
+    "body-parser": "~1.15.1",
+    "express": "^3.21.2",
+    "mongoose": "*",
+    "randomstring": "*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wisemuji/YN_Server.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wisemuji/YN_Server/issues"
+  },
+  "homepage": "https://github.com/wisemuji/YN_Server#readme"
+}
