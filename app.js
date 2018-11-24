@@ -12,9 +12,14 @@ app.use(bodyParser.urlencoded({
   extended: false
 }));
 
+//module setting
+import { Groups, Files, Users } from './mongo';
+require('./func')
 
 //서버 실행
 const PORT = 10004;
 app.listen(PORT, function(){
   console.log('server running');
 });
+
+require('./routes/auth/auth')(app, Users, rndstring);
