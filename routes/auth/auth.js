@@ -11,12 +11,13 @@ module.exports = (app, Users, rndstring)=>{
     return res.status(200).json({message: "success"});
   })
   .post('/signin', async(req,res)=>{
+    console.log(req.body);
     var result = await Users.findOne(req.body);
-    result.isLogined = true;
     if(!result) {
       return res.status(400).json({message: "invaild id or passwd"});
     }
     else{
+      result.isLogined = true;
       Users.updateOne({token: result.token}, result,
       function (err, res) {
           if(err) console.log(err);
