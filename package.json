@@ -10,8 +10,12 @@
   "dependencies": {
     "await-to-js": "^2.0.1",
     "body-parser": "~1.15.1",
+    "cookie-parser": "^1.4.3",
+    "cookie-session": "^2.0.0-beta.3",
     "express": "^3.21.2",
+    "mongodb": "^3.1.10",
     "mongoose": "*",
+    "multer": "^1.4.1",
     "randomstring": "*"
   },
   "repository": {
@@ -23,5 +27,9 @@
   "bugs": {
     "url": "https://github.com/wisemuji/YN_Server/issues"
   },
-  "homepage": "https://github.com/wisemuji/YN_Server#readme"
+  "homepage": "https://github.com/wisemuji/YN_Server#readme",
+  "devDependencies": {
+    "babel-preset-env": "^1.7.0",
+    "babel-register": "^6.26.0"
+  }
 }
