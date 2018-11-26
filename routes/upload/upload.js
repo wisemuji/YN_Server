@@ -12,9 +12,9 @@ module.exports = (app, Groups, Files, rndstring)=>{
     var data = fs.readFileSync(req.file.path);
     var insert_data = {};
     insert_data.file = Binary(data);
-    insert_data.name = req.body.originalname;
+    insert_data.name = req.file.originalname;
     insert_data.group_name = req.body.group_name;
-    data.pipe(crypto.createHash('sha1').setEncoding('hex')).
+    fs.createReadStream(req.file.path).pipe(crypto.createHash('sha1').setEncoding('hex')).
       on('finish', function () {
         console.log(this.read()) //the hash
         insert_data.sha1 = this.read();
@@ -38,7 +38,7 @@ module.exports = (app, Groups, Files, rndstring)=>{
   })
   .post('/downfile', async(req,res)=>{
       Files.findOne({name: req.body.filename}, function (err, documents) {
-        console.log('1'+req);
+        console.log(req.body);
         console.log('2'+documents);
         Groups.findOne({title: documents.group_name}, function (err, docu){
           if(!docu) res.status(404).json({message: 'not in group'});
