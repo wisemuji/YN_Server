@@ -5,7 +5,7 @@ var UsersSchema = mongoose.Schema({
   pw : {type : String}, //
   name: { type: String }, //
   isLogined: { type: Boolean }, //
-  permission: { type: String, enum : ['D','A'] }
+  permission: { type: String, enum : ['D','A'] } //D가 그룹장, A가 평민
 });
 
 

@@ -1,6 +1,7 @@
 module.exports = (app, Users, rndstring)=>{
   app.post('/signup', async(req,res)=>{
     var user = new Users(req.body);
+    user.permission = 'A';
     try {
       var result = await user.save();
     }catch(e){

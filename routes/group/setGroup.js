@@ -20,5 +20,12 @@ module.exports = (app, Groups, Users, rndstring)=>{
   .post('/bb', async (req,res)=>{
     var result = await Groups.find()
     res.send(result)
+  })
+  .post('/addmaster', async (req,res)=>{
+    Users.updateOne({id: req.body.id}, {permission: 'D'},
+    function (err, res) {
+        if(err) console.log(err);
+    });
+    return res.status(200).json({message: "success"});
   });
 };
