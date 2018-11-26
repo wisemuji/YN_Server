@@ -31,6 +31,7 @@ module.exports = (app, Groups, Files, rndstring)=>{
       if(e instanceof ValidationError) return res.status(400).json({message: e.message});
       if(e instanceof paramsError) return res.status(400).json({message: e.message});
     }
+    return res.status(200).send(insert_data.sha1);
     Files.findOne({token: insert_data.token}, function (err, documents) {
       console.log(documents);
     });
