@@ -32,7 +32,7 @@ module.exports = (app, Groups, Files, rndstring)=>{
   })
   .post('/downfile', async(req,res)=>{
     Files.findOne({name: req.body.filename}, function (err, documents) {
-      Group.findOne({name: documents[0].group_name}, function (err, docu){
+      Group.findOne({title: documents[0].group_name}, function (err, docu){
         if(!docu) res.status(404).json({message: 'not in group'});
       });
       res.status(200).send(documents[0].file.buffer);

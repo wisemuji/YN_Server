@@ -1,7 +1,7 @@
 module.exports = (app, Groups, Users, rndstring)=>{
   app.post('/setGroup', async (req,res)=>{
     const data = req.body;
-    Groups.findOneAndUpdate({token: data.token}, data, {upsert:true, new: true},
+    Groups.findOneAndUpdate({title: data.title}, data, {upsert:true, new: true},
     function (err, res) {
         if(err) console.log(err);
     });
