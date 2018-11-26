@@ -13,7 +13,10 @@ module.exports = (app, Groups, Files, rndstring)=>{
     var insert_data = {};
     insert_data.file = Binary(data);
     insert_data.name = req.body.originalname;
-    insert_data.token = req.body.token;
+    insert_data.group_name = req.body.group_name;
+    Groups.findOne({group_name: req.body.group_name}, function (err, documents) {
+      if(!documents.includes(req.body.id)) return res.status(404).json({message: 'not in group'});
+    });
     insert_data.comment = req.body.comment;
     var file = new Files(insert_data);
     try {
@@ -28,20 +31,12 @@ module.exports = (app, Groups, Files, rndstring)=>{
     });
   })
   .post('/downfile', async(req,res)=>{
-    Files.findOne({token: req.body.token}, function (err, documents) {
-      console.log(documents);
+    Files.findOne({name: req.body.filename}, function (err, documents) {
+      Group.findOne({name: documents[0].group_name}, function (err, docu){
+        if(!docu) res.status(404).json({message: 'not in group'});
+      });
+      res.status(200).send(documents[0].file.buffer);
     });
-    var data = fs.readFileSync(file_path);
-    var insert_data = {};
-    insert_data.file = Binary(data);
-    insert_data.token = rndstring.generate(40);
-    insert_data.comment = req.body.comment;
-    Files.insert(insert_data, function(err, result){
-      console.log(insert_data);
-    });
-    Files.findOne({token: insert_data.token}, function (err, documents) {
-      console.log(documents);
-    });
-  })
+  });
 
 };

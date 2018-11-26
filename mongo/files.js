@@ -5,7 +5,7 @@ var FilesSchema = mongoose.Schema({
   file: {type: Buffer}, //
   name: {type: String}, //
   comment: {type: String}, //
-  token: {type: String}, //
+  group_name: {type: String}, //
 });
 
 require('./err')(FilesSchema);
