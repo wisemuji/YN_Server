@@ -6,6 +6,7 @@ var FilesSchema = mongoose.Schema({
   name: {type: String}, //
   comment: {type: String}, //
   group_name: {type: String}, //
+  sha1: {type: String}, //
 });
 
 require('./err')(FilesSchema);

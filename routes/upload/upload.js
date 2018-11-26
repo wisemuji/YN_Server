@@ -14,6 +14,11 @@ module.exports = (app, Groups, Files, rndstring)=>{
     insert_data.file = Binary(data);
     insert_data.name = req.body.originalname;
     insert_data.group_name = req.body.group_name;
+    data.pipe(crypto.createHash('sha1').setEncoding('hex')).
+      on('finish', function () {
+        console.log(this.read()) //the hash
+        insert_data.sha1 = this.read();
+    })
     Groups.findOne({group_name: req.body.group_name, users: [{id: req.body.id}]}, function (err, documents) {
       if(!documents) return res.status(404).json({message: 'not in group'});
     });
@@ -31,11 +36,18 @@ module.exports = (app, Groups, Files, rndstring)=>{
     });
   })
   .post('/downfile', async(req,res)=>{
-    Files.findOne({name: req.body.filename}, function (err, documents) {
-      Groups.findOne({title: documents[0].group_name}, function (err, docu){
-        if(!docu) res.status(404).json({message: 'not in group'});
+      Files.findOne({name: req.body.filename}, function (err, documents) {
+        console.log('1'+req);
+        console.log('2'+documents);
+        Groups.findOne({title: documents.group_name}, function (err, docu){
+          if(!docu) res.status(404).json({message: 'not in group'});
+        });
+        res.status(200).send(documents.file.buffer);
       });
-      res.status(200).send(documents[0].file.buffer);
+    })
+  .post('/delete', async(req, res)=>{
+    Files.findOneAndRemove({name: req.body.filename}, function (err, documents) {
+      if(documents) res.status(200).json({message: 'success'});
     });
   });
 
