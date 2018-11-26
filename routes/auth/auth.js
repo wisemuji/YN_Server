@@ -1,6 +1,10 @@
+var bcrypt = require('bcrypt-nodejs');
 module.exports = (app, Users, rndstring)=>{
   app.post('/signup', async(req,res)=>{
     var user = new Users(req.body);
+    bcrypt.hash(req.body.pw, 10, function(err, hash) {
+      user.pw = hash;
+    });
     user.permission = 'A';
     try {
       var result = await user.save();
@@ -12,8 +16,14 @@ module.exports = (app, Users, rndstring)=>{
     return res.status(200).json({message: "success"});
   })
   .post('/signin', async(req,res)=>{
-    console.log(req.body);
-    var result = req.body;
+    var result = await Users.find({id: req.body.id});
+    bcrypt.compare(req.body.pw, result.pw, function(err, res) {
+      if(res) {
+       // Passwords match
+      } else {
+       res.status(400).json({message: e.message});
+      }
+    });
     result.isLogined = true;
     Users.updateOne({id: result.id}, result,
     function (err, res) {
