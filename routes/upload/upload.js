@@ -14,8 +14,8 @@ module.exports = (app, Groups, Files, rndstring)=>{
     insert_data.file = Binary(data);
     insert_data.name = req.body.originalname;
     insert_data.group_name = req.body.group_name;
-    Groups.findOne({group_name: req.body.group_name}, function (err, documents) {
-      if(!documents.includes(req.body.id)) return res.status(404).json({message: 'not in group'});
+    Groups.findOne({group_name: req.body.group_name, users: [{id: req.body.id}]}, function (err, documents) {
+      if(!documents) return res.status(404).json({message: 'not in group'});
     });
     insert_data.comment = req.body.comment;
     var file = new Files(insert_data);
@@ -32,7 +32,7 @@ module.exports = (app, Groups, Files, rndstring)=>{
   })
   .post('/downfile', async(req,res)=>{
     Files.findOne({name: req.body.filename}, function (err, documents) {
-      Group.findOne({title: documents[0].group_name}, function (err, docu){
+      Groups.findOne({title: documents[0].group_name}, function (err, docu){
         if(!docu) res.status(404).json({message: 'not in group'});
       });
       res.status(200).send(documents[0].file.buffer);

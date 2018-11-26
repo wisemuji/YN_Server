@@ -1,41 +1,31 @@
 var bcrypt = require('bcrypt');
 module.exports = (app, Users, rndstring)=>{
   app.post('/signup', async(req,res)=>{
-    var user = new Users(req.body);
+    var data = req.body;
     bcrypt.hash(req.body.pw, 10, function(err, hash) {
       if(err) return res.status(409).json({message:err.message});
-      user.pw = hash;
-      console.log(user.pw);
+      data.pw = hash;
+      data.permission = 'A';
+      var user = new Users(data);
+      var result = user.save();
+      return res.status(200).json(result);
     });
-    user.permission = 'A';
-    try {
-      var result = await user.save();
-      Users.updateOne({id: result.id}, user,
-      function (err, res) {
-          if(err) console.log(err);
-      });
-    }catch(e){
-      if(e instanceof user_duplicate) return res.status(409).json({message:"already exist"});
-      if(e instanceof ValidationError) return res.status(400).json({message: e.message});
-      if(e instanceof paramsError) return res.status(400).json({message: e.message});
-    }
-    return res.status(200).json(result);
   })
   .post('/signin', async(req,res)=>{
-    var result = await Users.find({id: req.body.id});
-    bcrypt.compare(req.body.pw, result.pw, function(err, res) {
-      if(res) {
-       // Passwords match
+    var user = await Users.find({id: req.body.id});
+    console.log(req.body.pw);
+    bcrypt.compare(req.body.pw, user[0].pw, function(err, result) {
+      if(result) {
+        user[0].isLogined = true;
+        Users.updateOne({id: user[0].id}, user[0],
+        function (err, res) {
+            if(err) console.log(err);
+        });
+        return res.status(200).json({message: "success"});
       } else {
-       res.status(400).json({message: 'e.message'});
+        return res.status(400).json({message: 'e.message'});
       }
     });
-    result.isLogined = true;
-    Users.updateOne({id: result.id}, result,
-    function (err, res) {
-        if(err) console.log(err);
-    });
-    return res.status(200).json({message: "success"});
   })
   .post('/delUser', async (req,res)=>{
     var result = await Users.deleteOne({id : req.body.id });
